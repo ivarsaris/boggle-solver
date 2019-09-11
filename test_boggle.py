@@ -1,5 +1,6 @@
 import unittest
 import boggle
+from string import ascii_uppercase
 
 class TestBoggle(unittest.TestCase):
     # Our suite test for boggle solver
@@ -22,3 +23,30 @@ class TestBoggle(unittest.TestCase):
         self.assertIn((1, 0), grid)
         self.assertIn((1, 1), grid)
         self.assertNotIn((2, 2), grid)
+        
+    def test_grid_is_filled_with_letters(self):
+        # Test that each of the coordinates in the grid contains a letter
+        grid = boggle.make_grid(2, 3)
+        for letter in grid.values():
+            self.assertIn(letter, ascii_uppercase)
+            
+    def test_neighbours_of_a_position(self):
+        # ensures that a position has 8 neighbours
+        coords = (1, 2)
+        neighbours = boggle.neighbours_of_position(coords)
+        self.assertIn((0, 1), neighbours)
+        self.assertIn((0, 2), neighbours)
+        self.assertIn((0, 3), neighbours)
+        self.assertIn((1, 1), neighbours)
+        self.assertIn((2, 2), neighbours)
+        
+    def test_all_grid_neighbours(self):
+        # ensure all grid positions have neighbours
+        grid = boggle.make_grid(2, 2)
+        neighbours = boggle.all_grid_neighbours(grid)
+        self.assertEqual(len(neighbours), len(grid))
+        for pos in grid:
+            others = list(grid) #creates list from dictionarie's keys
+            others.remove(pos)
+            self.assertListEqual(sorted(neighbours[pos]), sorted(others))
+        
